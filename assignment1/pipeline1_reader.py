@@ -6,6 +6,9 @@ from bs4 import BeautifulSoup
 path = './reuters21578'
 articles_num = 5
 documents = []
+output_dir = "./output/"
+pipeline_output_file = 'pipeline1.txt'
+
 
 def read_from_file():
     for file in os.listdir(path):
@@ -45,13 +48,9 @@ if __name__ == '__main__':
                 counts += 1
             if counts == articles_num:
                 print(documents)
-                output_dir = "./output/"
                 if not os.path.exists(output_dir):
                     os.makedirs(output_dir)
-                with open(output_dir + 'pipeline1.txt', "w") as f:
+                with open(output_dir + pipeline_output_file, "w") as f:
                     for line in documents:
                         f.write(line + '\n')
                 sys.exit()
-
-
-
