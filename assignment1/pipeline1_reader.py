@@ -44,13 +44,11 @@ if __name__ == '__main__':
                 body = document_after_parsed.find('body').string
                 content = title + ' ' + body
                 content_dict = {'documentId': id, 'content': content}
-                documents.append(str(content_dict))
+                actual_output_dir = output_dir + str(counts) + '/'
+                if not os.path.exists(actual_output_dir):
+                    os.makedirs(actual_output_dir)
+                with open(actual_output_dir + pipeline_output_file, "w") as f:
+                    f.write(str(content_dict))
                 counts += 1
             if counts == articles_num:
-                print(documents)
-                if not os.path.exists(output_dir):
-                    os.makedirs(output_dir)
-                with open(output_dir + pipeline_output_file, "w") as f:
-                    for line in documents:
-                        f.write(line + '\n')
                 sys.exit()
