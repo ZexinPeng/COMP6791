@@ -11,8 +11,8 @@ if __name__ == '__main__':
     actual_output_dir = output_dir + str(counts) + '/'
     while os.path.exists(actual_output_dir):
         for line in open(actual_output_dir + pipeline_input_file):
-            text_dict = eval(line.replace('\n', ''))
-            tokens = word_tokenize(text_dict['content'])
+            text = line.replace('\n', '')
+            tokens = word_tokenize(text)
         special_symbols = '''!()-[]{};:'",<>./``''?@#$%^&*_~'''
         token_list = []
         # clean all special symbols in the tokens
