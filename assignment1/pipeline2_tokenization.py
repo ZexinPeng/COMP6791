@@ -17,7 +17,12 @@ if __name__ == '__main__':
         token_list = []
         # clean all special symbols in the tokens
         for token in tokens:
-            if token not in special_symbols and token != '--':
+            have_digital = False
+            for character in token:
+                if character in '''0123456789''':
+                    have_digital = True
+                    break
+            if token not in special_symbols and token != '--' and not have_digital:
                 token_list.append(token)
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)

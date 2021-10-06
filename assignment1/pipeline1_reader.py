@@ -31,7 +31,7 @@ if __name__ == '__main__':
     counts = 0
     for file in files:
         # get single document
-        for document in re.findall("<REUTERS TOPICS.*?</REUTERS>", file.replace('\n', '')):
+        for document in re.findall("<REUTERS TOPICS.*?</REUTERS>", file.replace('\n', ' ')):
             title = re.search("<TITLE>.*?</TITLE>", document).group()[7: -8]
             body = re.search("<BODY>.*?</BODY>", document).group()[6: -7]
             if body is not None:
