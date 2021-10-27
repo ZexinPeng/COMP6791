@@ -4,7 +4,7 @@ import re
 
 pipeline_output_file = "./posting-list.txt"
 path = '../reuters21578'
-punctuations = '''=\'+!()-[]{};:",<>./`?@#$%^&*_~'''
+punctuations = '''=\'+!()[]{};:",<>./`?@#$%^&*_~'''
 dictionary = {}
 
 
@@ -49,25 +49,42 @@ if __name__ == '__main__':
         # get single document
         for document in re.findall("<REUTERS TOPICS.*?</REUTERS>", file.replace('\n', ' ')):
             document = document.replace("&lt", "")
+            document = document.replace("&#3;", "")
             title_group = re.search("<TITLE>.*?</TITLE>", document)
             if title_group is None:
                 continue
             title = title_group.group()[7: -8]
             body_group = re.search("<BODY>.*?</BODY>", document)
-            if body_group is None:
-                continue
-            body = body_group.group()[6: -7]
+            if body_group is not None:
+                body = body_group.group()[6: -7]
+            else:
+                body = None
             docID = re.search('''NEWID="[0-9]+"''', document).group()[7:-1]
-            tokens = word_tokenize(title + " " + body)
+            if docID is None:
+                continue
+            if title is not None and body is not None:
+                tokens = word_tokenize(title + " " + body)
+            else:
+                tokens = word_tokenize(title)
             for token in tokens:
                 if token == "''":
                     continue
                 if len(token) == 1 and token in punctuations:
                     continue
+                flag = True
                 for character in token:
+                    if character == '-':
+                        tmp = token.split('-')
+                        for single in tmp:
+                            F.append([single, docID])
+                        flag = False
+                        break
                     if character in punctuations:
-                        token.replace(character, '')
-                F.append([token, docID])
+                        token_list = list(token)
+                        token_list.pop(token.index(character))
+                        token = "".join(token_list)
+                if flag:
+                    F.append([token, docID])
 
     F = sorted(F, key=(lambda x: [x[0]]))
     print("sort completed!")
