@@ -1,6 +1,7 @@
 from nltk import word_tokenize
 import os
 import re
+import time
 
 pipeline_output_file = "./posting-list.txt"
 path = '../reuters21578'
@@ -41,11 +42,15 @@ def store_in_disk():
 
 
 if __name__ == '__main__':
+    start = time.time()
     F = []
     files = read_from_file()
     # iterate all .sgm files
     counts = 0
+    pairs_num = 10000
     for file in files:
+        # if pairs_num < 0:
+        #     break
         # get single document
         for document in re.findall("<REUTERS TOPICS.*?</REUTERS>", file.replace('\n', ' ')):
             document = document.replace("&lt", "")
@@ -77,6 +82,7 @@ if __name__ == '__main__':
                         tmp = token.split('-')
                         for single in tmp:
                             F.append([single, docID])
+                            pairs_num -= 1
                         flag = False
                         break
                     if character in punctuations:
@@ -85,6 +91,7 @@ if __name__ == '__main__':
                         token = "".join(token_list)
                 if flag:
                     F.append([token, docID])
+                    pairs_num -= 1
 
     F = sorted(F, key=(lambda x: [x[0]]))
     print("sort completed!")
@@ -94,7 +101,9 @@ if __name__ == '__main__':
 
     construct_posting_list()
 
-    store_in_disk()
+    end = time.time()
+    print("the total time of 10000 term-docID pairs of naive indexer is " + str("%.2f" % ((end - start) * 1000)) + " ms")
+
 
 
 

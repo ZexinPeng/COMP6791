@@ -2,7 +2,7 @@ import sys
 import os
 import re
 
-path = './reuters21578'
+path = '../reuters21578'
 articles_num = 5
 documents = []
 output_dir = "./output/"

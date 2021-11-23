@@ -26,8 +26,8 @@ if __name__ == '__main__':
     # iterate all .sgm files
     counts = 0
     for file in files:
-        if pairs_num < 0:
-            break;
+        # if pairs_num < 0:
+        #     break
         # get single document
         for document in re.findall("<REUTERS TOPICS.*?</REUTERS>", file.replace('\n', ' ')):
             document = document.replace("&lt", "")
@@ -84,7 +84,7 @@ if __name__ == '__main__':
                             dictionary_token_list.append(docID)
                             pairs_num -= 1
     end = time.time()
-    print(end - start)
+    print("the total time of 10000 term-docID pairs in assignment3 is " + str("%.2f" % ((end - start) * 1000)) + " ms")
 
 
 

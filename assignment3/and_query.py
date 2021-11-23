@@ -14,12 +14,22 @@ def get_term_lsit(query):
     return term_list
 
 
-def get_intersection(listA, listB):
-    if len(listB) == 0:
+def get_intersection(listA, res):
+    tmp = []
+    i = 0
+    j = 0
+    if len(res) == 0:
         return listA
-    if listA is None:
-        return listB
-    return list(set(listA).intersection(set(listB)))
+    while i < len(listA) and j < len(res):
+        if int(listA[i]) == int(res[j]):
+            tmp.append(listA[i])
+            i += 1
+            j += 1
+        elif int(listA[i]) > int(res[j]):
+            j += 1
+        else:
+            i += 1
+    return tmp
 
 
 if __name__ == '__main__':
@@ -30,7 +40,10 @@ if __name__ == '__main__':
             query = input()
             term_list = get_term_lsit(query)
             res = []
-            print(dic["Grootvlei"])
             for term in term_list:
                 res = get_intersection(dic.get(term), res)
-            print(res)
+                if len(res) == 0:
+                    print("No result found")
+                    break
+            if len(res) > 0:
+                print(res)
