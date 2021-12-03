@@ -1,4 +1,5 @@
 import scrapy
+from bs4 import BeautifulSoup
 
 
 class ConcordiaSpider(scrapy.Spider):
@@ -19,6 +20,11 @@ class ConcordiaSpider(scrapy.Spider):
 
     def parse(self, response):
         print("URL: " + response.request.url)
+        soup = BeautifulSoup(response.text)
+        print(soup.get_text())
+        f = open("example.txt", "w", encoding='utf-8')
+        f.write(soup.get_text())
+        f.close()
         page_urls = response.css('a::attr(href)').getall()
         for page_url in page_urls:
             if self.file_num <= 0:
