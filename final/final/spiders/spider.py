@@ -1,8 +1,11 @@
 import scrapy
-from bs4 import BeautifulSoup
+import os
 
 
 class ConcordiaSpider(scrapy.Spider):
+    """
+    go to the top directory path and use  "scrapy crawl concordia -a file_num=2"
+    """
     name = "concordia"
     file_num = 0
 
@@ -19,11 +22,23 @@ class ConcordiaSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        print("URL: " + response.request.url)
-        soup = BeautifulSoup(response.text)
-        print(soup.get_text())
-        f = open("example.txt", "w", encoding='utf-8')
-        f.write(soup.get_text())
+        path_list = response.request.url.split('/');
+        print("URL: " + str(path_list))
+        file_path = "files/"
+        if not os.path.exists(file_path):
+            os.mkdir(file_path)
+        for i in range(3, len(path_list) - 1):
+            file_path += path_list[i] + "/"
+            if not os.path.exists(file_path):
+                os.mkdir(file_path)
+        if path_list[len(path_list) - 1] == '':
+            file_path += "main.html"
+        else:
+            file_path += path_list[len(path_list) - 1]
+        print("file path:   " + file_path)
+
+        f = open(file_path, "w", encoding='utf-8')
+        f.write(response.text)
         f.close()
         page_urls = response.css('a::attr(href)').getall()
         for page_url in page_urls:
@@ -32,5 +47,4 @@ class ConcordiaSpider(scrapy.Spider):
             if str(page_url).startswith("/"):
                 self.file_num -= 1
                 next_page = response.urljoin(page_url)
-                print(next_page)
                 yield scrapy.Request(next_page, callback=self.parse)
