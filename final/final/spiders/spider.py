@@ -1,5 +1,7 @@
 import scrapy
 import os
+import threading
+from scrapy.exceptions import CloseSpider
 
 
 class ConcordiaSpider(scrapy.Spider):
@@ -8,6 +10,7 @@ class ConcordiaSpider(scrapy.Spider):
     """
     name = "concordia"
     file_num = 0
+    lock = threading.Lock()
 
     def __init__(self, file_num=None, *args, **kwargs):
         self.file_num = int(file_num)
@@ -22,8 +25,13 @@ class ConcordiaSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        path_list = response.request.url.split('/');
-        print("URL: " + str(path_list))
+        page_urls = response.css('a::attr(href)').getall()
+        if self.file_num <= 0:
+            raise CloseSpider()
+        path_list = response.request.url.split('/')
+        if not path_list[len(path_list) - 1].endswith(".html") and not path_list[len(path_list) - 1] == '':
+            return
+        print("URL: " + response.request.url)
         file_path = "files/"
         if not os.path.exists(file_path):
             os.mkdir(file_path)
@@ -40,11 +48,11 @@ class ConcordiaSpider(scrapy.Spider):
         f = open(file_path, "w", encoding='utf-8')
         f.write(response.text)
         f.close()
-        page_urls = response.css('a::attr(href)').getall()
+        self.lock.acquire()
+        self.file_num -= 1
+        self.lock.release()
+
         for page_url in page_urls:
-            if self.file_num <= 0:
-                break
             if str(page_url).startswith("/"):
-                self.file_num -= 1
                 next_page = response.urljoin(page_url)
                 yield scrapy.Request(next_page, callback=self.parse)
