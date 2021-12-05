@@ -1,23 +1,10 @@
 from bs4 import BeautifulSoup
-from sklearn.datasets import fetch_20newsgroups
-from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_extraction.text import HashingVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import Normalizer
-from sklearn import metrics
+from sklearn.cluster import KMeans
 
-from sklearn.cluster import KMeans, MiniBatchKMeans
-
-import scrapy
-import logging
-from optparse import OptionParser
-import sys
 import os
 from time import time
 
-import numpy as np
 
 documents = []
 cluster_num = 6
@@ -40,7 +27,6 @@ vectorizer = TfidfVectorizer(
     use_idf=True,
 )
 X = vectorizer.fit_transform(documents)
-print(X)
 print("done in %fs" % (time() - t0))
 print("n_samples: %d, n_features: %d" % X.shape)
 print()
