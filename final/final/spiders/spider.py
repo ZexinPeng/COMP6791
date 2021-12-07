@@ -6,7 +6,7 @@ from scrapy.exceptions import CloseSpider
 
 class ConcordiaSpider(scrapy.Spider):
     """
-    go to the top directory path and use  "scrapy crawl concordia -a file_num=2"
+    go to the top directory path and use  "scrapy crawl concordia -a file_num=100"
     """
     name = "concordia"
     file_num = 0

@@ -46,11 +46,11 @@ print("done in %0.3fs" % (time() - t0))
 print()
 
 print("Top terms per cluster:")
-
 order_centroids = km.cluster_centers_.argsort()[:, ::-1]
+
 terms = vectorizer.get_feature_names_out()
 for i in range(cluster_num):
     print("Cluster %d:" % i, end="")
-    for ind in order_centroids[i, :20]:
+    for ind in order_centroids[i, :50]:
         print(" %s" % terms[ind], end="")
     print()
