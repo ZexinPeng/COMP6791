@@ -1,3 +1,4 @@
+import shutil
 import scrapy
 import os
 import threading
@@ -13,6 +14,7 @@ class ConcordiaSpider(scrapy.Spider):
     lock = threading.Lock()
 
     def __init__(self, file_num=None, *args, **kwargs):
+        shutil.rmtree("files")
         self.file_num = int(file_num)
         print("The number of crawled files is " + file_num)
         super(ConcordiaSpider, self).__init__(*args, **kwargs)

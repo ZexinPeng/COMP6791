@@ -7,8 +7,8 @@ from time import time
 
 
 documents = []
-cluster_num = 6
-for root, dirs, files in os.walk(r"files"):
+cluster_num = 3
+for root, dirs, files in os.walk(r"../files"):
     for file in files:
         file_path = os.path.join(root, file)
         f = open(file_path, "r", encoding='utf-8')
