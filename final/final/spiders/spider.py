@@ -10,7 +10,7 @@ class ConcordiaSpider(scrapy.Spider):
     go to the top directory path and use  "scrapy crawl concordia -a file_num=100"
     """
     name = "concordia"
-    file_num = 0
+    file_num = 100
     lock = threading.Lock()
 
     def __init__(self, file_num=None, *args, **kwargs):

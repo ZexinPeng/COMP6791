@@ -5,12 +5,10 @@ from sklearn.cluster import KMeans
 import os
 from time import time
 
-
 documents = []
-cluster_num = 6
 
 
-def get_cluster_list():
+def get_cluster_list(terms_num=None, cluster_num=3):
     for root, dirs, files in os.walk(r"../files"):
         for file in files:
             file_path = os.path.join(root, file)
@@ -56,12 +54,37 @@ def get_cluster_list():
     for i in range(cluster_num):
         print("Cluster %d:" % i, end="")
         tmp = []
-        for ind in order_centroids[i, :50]:
-            print(" %s" % terms[ind], end="")
-            tmp.append(terms[ind])
+        if terms_num is None:
+            for ind in order_centroids[i]:
+                print(" %s" % terms[ind], end="")
+                tmp.append(terms[ind])
+        else:
+            for ind in order_centroids[i, :int(terms_num)]:
+                print(" %s" % terms[ind], end="")
+                tmp.append(terms[ind])
         print()
         cluster_list.append(tmp)
-    return cluster_list
+    return cluster_list, cluster_num
 
 
-clusters = get_cluster_list()
+if __name__ == "__main__":
+    clusters, cluster_num = get_cluster_list(50, 3)
+    f = open("Kmeans-" + str(cluster_num) + ".txt", "w", encoding='utf-8')
+    for i in range(cluster_num):
+        f.write(str(clusters[i]) + "\n")
+    f.close()
+    clusters, cluster_num = get_cluster_list(50, 6)
+    f = open("Kmeans-" + str(cluster_num) + ".txt", "w", encoding='utf-8')
+    for i in range(cluster_num):
+        f.write(str(clusters[i]) + "\n")
+    f.close()
+    clusters, cluster_num = get_cluster_list(5000, 3)
+    f = open("../sentiment/Kmeans-" + str(cluster_num) + ".txt", "w", encoding='utf-8')
+    for i in range(cluster_num):
+        f.write(str(clusters[i]) + "\n")
+    f.close()
+    clusters, cluster_num = get_cluster_list(5000, 6)
+    f = open("../sentiment/Kmeans-" + str(cluster_num) + ".txt", "w", encoding='utf-8')
+    for i in range(cluster_num):
+        f.write(str(clusters[i]) + "\n")
+    f.close()
